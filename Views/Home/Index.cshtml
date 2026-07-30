@@ -1,0 +1,38 @@
+@model IEnumerable<Pizza>
+@inject IRestaurantSettingsService RestaurantSettings
+@{
+    ViewData["Title"] = "الرئيسية";
+    var restaurant = await RestaurantSettings.GetAsync();
+}
+
+<section class="hero text-center">
+    <h1 class="display-5 fw-bold">@restaurant.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(restaurant.Description))
+    {
+        <p class="lead mb-0">@restaurant.Description</p>
+    }
+    <a asp-controller="Pizzas" asp-action="Index" class="btn btn-light btn-lg mt-3">تصفّح القائمة</a>
+</section>
+
+<h2 class="h4 mb-3">الأكثر طلبًا</h2>
+<div class="row g-4">
+    @foreach (var pizza in Model)
+    {
+        <div class="col-sm-6 col-lg-3">
+            <div class="card pizza-card h-100">
+                <img src="@(string.IsNullOrWhiteSpace(pizza.ImageUrl) ? "https://placehold.co/400x300?text=Pizza" : pizza.ImageUrl)" class="pizza-thumb card-img-top" alt="@pizza.Name" />
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@pizza.Name</h5>
+                    <p class="card-text small text-muted flex-grow-1">@pizza.Description</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">@pizza.Price.ToString("0.##") ج.م</span>
+                        <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="id" value="@pizza.PizzaId" />
+                            <button type="submit" class="btn btn-brand btn-sm"><i class="bi bi-cart-plus"></i> أضف</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

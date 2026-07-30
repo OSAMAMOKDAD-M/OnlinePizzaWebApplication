@@ -1,0 +1,35 @@
+@model Order
+@{
+    ViewData["Title"] = "إتمام الطلب";
+}
+<div class="col-lg-7 mx-auto">
+    <h1 class="h3 mb-4">بيانات التوصيل</h1>
+    <div class="card"><div class="card-body">
+        <form asp-action="Checkout" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div class="mb-3">
+                <label asp-for="CustomerName" class="form-label"></label>
+                <input asp-for="CustomerName" class="form-control" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-brand">تأكيد الطلب</button>
+            <a asp-controller="ShoppingCart" asp-action="Index" class="btn btn-link">العودة للسلة</a>
+        </form>
+    </div></div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

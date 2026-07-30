@@ -1,0 +1,29 @@
+@model Order
+@{
+    ViewData["Title"] = $"الطلب #{Model.OrderId}";
+}
+<h1 class="h3 mb-4">تفاصيل الطلب #@Model.OrderId</h1>
+<div class="card mb-3"><div class="card-body">
+    <p class="mb-1"><strong>العميل:</strong> @Model.CustomerName</p>
+    <p class="mb-1"><strong>الهاتف:</strong> @Model.PhoneNumber</p>
+    <p class="mb-1"><strong>العنوان:</strong> @Model.Address</p>
+    <p class="mb-0"><strong>التاريخ:</strong> @Model.OrderPlaced.ToString("yyyy-MM-dd HH:mm")</p>
+</div></div>
+<div class="card"><div class="table-responsive">
+    <table class="table mb-0">
+        <thead class="table-light"><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
+        <tbody>
+            @foreach (var d in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@d.Pizza?.Name</td>
+                    <td>@d.Amount</td>
+                    <td>@d.Price.ToString("0.##")</td>
+                    <td>@((d.Price * d.Amount).ToString("0.##"))</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot><tr class="fw-bold"><td colspan="3">الإجمالي</td><td>@Model.OrderTotal.ToString("0.##")</td></tr></tfoot>
+    </table>
+</div></div>
+<a asp-action="Index" class="btn btn-link mt-3">عودة</a>

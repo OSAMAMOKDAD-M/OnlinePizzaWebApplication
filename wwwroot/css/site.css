@@ -1,0 +1,85 @@
+:root {
+    --brand: #c1272d;
+    --brand-dark: #96161b;
+    --brand-accent: #f4a259;
+}
+
+body {
+    font-family: "Segoe UI", "Tahoma", sans-serif;
+    background-color: #f6f7fb;
+    color: #212529;
+}
+
+.app-navbar {
+    background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+}
+
+.app-navbar .btn-link {
+    text-decoration: none;
+}
+
+.app-footer {
+    background: #1f2430;
+    color: #e9ecef;
+    line-height: 1.9;
+}
+
+.card {
+    border: none;
+    border-radius: .9rem;
+    box-shadow: 0 .25rem .75rem rgba(0,0,0,.06);
+}
+
+.btn-brand {
+    background-color: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+}
+
+.btn-brand:hover {
+    background-color: var(--brand-dark);
+    border-color: var(--brand-dark);
+    color: #fff;
+}
+
+.pizza-card img,
+.pizza-thumb {
+    height: 190px;
+    object-fit: cover;
+    border-top-left-radius: .9rem;
+    border-top-right-radius: .9rem;
+    background: #eee;
+}
+
+.hero {
+    background: linear-gradient(120deg, var(--brand-dark), var(--brand));
+    color: #fff;
+    border-radius: 1rem;
+    padding: 3rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.auth-card {
+    max-width: 460px;
+    margin: 2rem auto;
+}
+
+.license-screen {
+    max-width: 620px;
+    margin: 2rem auto;
+}
+
+.badge-active { background-color: #198754; }
+.badge-expired { background-color: #dc3545; }
+.badge-disabled { background-color: #6c757d; }
+
+.key-box {
+    font-family: monospace;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+    background: #fff3cd;
+    border: 1px dashed #d39e00;
+    padding: .75rem 1rem;
+    border-radius: .5rem;
+    word-break: break-all;
+}

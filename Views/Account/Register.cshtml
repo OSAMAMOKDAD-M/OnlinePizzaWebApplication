@@ -1,0 +1,28 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "إنشاء حساب";
+}
+<div class="card auth-card"><div class="card-body p-4">
+    <h1 class="h4 text-center mb-4">إنشاء حساب</h1>
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="All" class="text-danger mb-2"></div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label"></label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-brand w-100">تسجيل</button>
+    </form>
+    <p class="text-center mt-3 mb-0">لديك حساب؟ <a asp-action="Login">تسجيل الدخول</a></p>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

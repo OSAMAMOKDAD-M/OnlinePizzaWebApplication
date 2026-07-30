@@ -1,0 +1,25 @@
+@model Category
+@{
+    ViewData["Title"] = "تعديل تصنيف";
+}
+<div class="col-lg-6 mx-auto">
+    <h1 class="h3 mb-4">تعديل تصنيف</h1>
+    <div class="card"><div class="card-body">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+            <input type="hidden" asp-for="CategoryId" />
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-brand">حفظ</button>
+            <a asp-action="Index" class="btn btn-link">إلغاء</a>
+        </form>
+    </div></div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

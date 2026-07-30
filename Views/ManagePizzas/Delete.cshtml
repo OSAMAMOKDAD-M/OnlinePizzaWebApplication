@@ -1,0 +1,15 @@
+@model Pizza
+@{
+    ViewData["Title"] = "حذف بيتزا";
+}
+<div class="col-lg-6 mx-auto">
+    <h1 class="h3 mb-4">حذف بيتزا</h1>
+    <div class="card"><div class="card-body">
+        <p>هل تريد حذف <strong>@Model.Name</strong>؟</p>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="PizzaId" />
+            <button type="submit" class="btn btn-danger">حذف</button>
+            <a asp-action="Index" class="btn btn-link">إلغاء</a>
+        </form>
+    </div></div>
+</div>
