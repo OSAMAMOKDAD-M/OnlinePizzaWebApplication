@@ -25,8 +25,16 @@ namespace OnlinePizzaWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "No database connection string configured. Set ConnectionStrings__DefaultConnection " +
+                    "as an environment variable or via user-secrets; it must not be committed to source control.");
+            }
+
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>()
@@ -50,6 +58,15 @@ namespace OnlinePizzaWebApplication
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.IsEssential = true;
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
+
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
             });
 
             services.Configure<IdentityOptions>(options =>
@@ -64,7 +81,7 @@ namespace OnlinePizzaWebApplication
 
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
 
                 // User settings
@@ -77,6 +94,8 @@ namespace OnlinePizzaWebApplication
                 options.Cookie.Name = ".OnlinePizzaWebApplication";
                 options.Cookie.IsEssential = true;
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 // If the LoginPath isn't set, ASP.NET Core defaults 
                 // the path to /Account/Login.
