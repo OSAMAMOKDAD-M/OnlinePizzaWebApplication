@@ -32,7 +32,7 @@ namespace OnlinePizzaWebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateRestaurant(RestaurantSetting model)
+        public async Task<IActionResult> UpdateRestaurant([Bind(Prefix = "Restaurant")] RestaurantSetting model)
         {
             if (!ModelState.IsValid)
             {
