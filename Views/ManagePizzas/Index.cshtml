@@ -1,0 +1,28 @@
+@model IEnumerable<Pizza>
+@{
+    ViewData["Title"] = "إدارة البيتزا";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">إدارة البيتزا</h1>
+    <a asp-action="Create" class="btn btn-brand"><i class="bi bi-plus-lg"></i> إضافة</a>
+</div>
+<div class="card"><div class="table-responsive">
+    <table class="table align-middle mb-0">
+        <thead class="table-light"><tr><th>الاسم</th><th>التصنيف</th><th>السعر</th><th>متوفر</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Category?.Name</td>
+                <td>@p.Price.ToString("0.##")</td>
+                <td>@(p.IsAvailable ? "نعم" : "لا")</td>
+                <td class="text-nowrap">
+                    <a asp-action="Edit" asp-route-id="@p.PizzaId" class="btn btn-sm btn-outline-secondary">تعديل</a>
+                    <a asp-action="Delete" asp-route-id="@p.PizzaId" class="btn btn-sm btn-outline-danger">حذف</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div></div>

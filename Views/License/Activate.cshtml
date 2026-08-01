@@ -1,0 +1,26 @@
+@model ActivateLicenseViewModel
+@{
+    ViewData["Title"] = "تفعيل النظام";
+    var status = ViewBag.Status as LicenseStatusResult;
+}
+<div class="card license-screen"><div class="card-body p-4 text-center">
+    <i class="bi bi-key-fill text-warning" style="font-size:3rem;"></i>
+    <h1 class="h3 mt-3">تفعيل النظام</h1>
+    <p class="text-muted">الرجاء إدخال مفتاح التفعيل للمتابعة.</p>
+
+    @if (status != null && status.State == LicenseState.ClockTampered)
+    {
+        <div class="alert alert-danger">تم اكتشاف تغيير في تاريخ الجهاز. يرجى ضبط الوقت الصحيح ثم إعادة المحاولة.</div>
+    }
+
+    <form asp-action="Activate" method="post" class="text-end mt-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <div class="mb-3">
+            <label asp-for="LicenseKey" class="form-label"></label>
+            <input asp-for="LicenseKey" class="form-control text-center" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" />
+            <span asp-validation-for="LicenseKey" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-brand w-100">تفعيل</button>
+    </form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

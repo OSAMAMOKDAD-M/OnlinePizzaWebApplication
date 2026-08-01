@@ -1,0 +1,85 @@
+@model SettingsViewModel
+@{
+    ViewData["Title"] = "الإعدادات";
+    var lic = Model.License;
+    var stateLabel = lic.State switch
+    {
+        LicenseState.Valid => "فعّال",
+        LicenseState.Expired => "منتهٍ",
+        LicenseState.Disabled => "معطّل",
+        LicenseState.ClockTampered => "تلاعب بالوقت",
+        _ => "غير مُفعّل"
+    };
+    var stateClass = lic.IsValid ? "badge-active" : "badge-expired";
+}
+<h1 class="h3 mb-4">الإعدادات</h1>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card"><div class="card-body">
+            <h2 class="h5 mb-3">بيانات المطعم</h2>
+            <form asp-action="UpdateRestaurant" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                <input type="hidden" asp-for="Restaurant.Id" />
+                <div class="mb-3">
+                    <label asp-for="Restaurant.Name" class="form-label"></label>
+                    <input asp-for="Restaurant.Name" class="form-control" />
+                    <span asp-validation-for="Restaurant.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Restaurant.LogoUrl" class="form-label"></label>
+                    <input asp-for="Restaurant.LogoUrl" class="form-control" placeholder="https://..." />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Restaurant.Address" class="form-label"></label>
+                    <input asp-for="Restaurant.Address" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Restaurant.Phone" class="form-label"></label>
+                    <input asp-for="Restaurant.Phone" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Restaurant.Description" class="form-label"></label>
+                    <textarea asp-for="Restaurant.Description" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-brand">حفظ البيانات</button>
+            </form>
+        </div></div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card mb-4"><div class="card-body">
+            <h2 class="h5 mb-3">حالة الترخيص</h2>
+            <p class="mb-2"><span class="badge @stateClass fs-6">@stateLabel</span></p>
+            @if (lic.ExpiresAtUtc.HasValue)
+            {
+                <p class="mb-1"><strong>تاريخ الانتهاء:</strong> @lic.ExpiresAtUtc.Value.ToLocalTime().ToString("yyyy-MM-dd")</p>
+                @if (lic.IsValid)
+                {
+                    <p class="mb-1"><strong>الأيام المتبقية:</strong> @lic.DaysRemaining</p>
+                    @if (lic.IsNearExpiry(Model.WarningDays))
+                    {
+                        <div class="alert alert-warning py-2 mt-2 mb-0">
+                            اشتراكك يقترب من الانتهاء (خلال @lic.DaysRemaining يوم). يُنصح بالتجديد.
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="mb-1 text-danger"><strong>أيام منتهية:</strong> @lic.DaysExpired</p>
+                }
+            }
+        </div></div>
+
+        <div class="card"><div class="card-body">
+            <h2 class="h5 mb-3">إدخال مفتاح تفعيل جديد</h2>
+            <form asp-action="ActivateKey" method="post">
+                <div class="mb-3">
+                    <input name="newLicenseKey" class="form-control text-center" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" />
+                </div>
+                <button type="submit" class="btn btn-outline-brand btn-brand w-100">تفعيل</button>
+            </form>
+        </div></div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,14 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var owner = Configuration["Copyright:Owner"];
+    var year = Configuration["Copyright:Year"];
+    var phone = Configuration["Copyright:Phone"];
+    var releaseDate = Configuration["Copyright:ReleaseDate"];
+}
+<footer class="app-footer mt-auto py-3 text-center">
+    <div class="container small">
+        <div>&copy; @year / @owner</div>
+        <div>ت: @phone</div>
+        <div>تاريخ الإصدار: @releaseDate</div>
+    </div>
+</footer>

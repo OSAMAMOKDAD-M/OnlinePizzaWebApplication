@@ -1,0 +1,90 @@
+@model IEnumerable<LicenseKey>
+@{
+    ViewData["Title"] = "إدارة التراخيص";
+    string q = ViewBag.Query as string ?? "";
+    string StatusBadge(LicenseStatus s) => s switch
+    {
+        LicenseStatus.Active => "badge-active",
+        LicenseStatus.Expired => "badge-expired",
+        _ => "badge-disabled"
+    };
+    string StatusLabel(LicenseStatus s) => s switch
+    {
+        LicenseStatus.Active => "فعّال",
+        LicenseStatus.Expired => "منتهٍ",
+        _ => "معطّل"
+    };
+    string DurationLabel(LicenseDuration d) => d switch
+    {
+        LicenseDuration.Week => "أسبوع",
+        LicenseDuration.Month => "شهر",
+        LicenseDuration.TwoMonths => "شهران",
+        LicenseDuration.ThreeMonths => "ثلاثة أشهر",
+        LicenseDuration.SixMonths => "ستة أشهر",
+        LicenseDuration.Year => "سنة",
+        _ => d.ToString()
+    };
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">إدارة التراخيص</h1>
+    <a asp-action="Create" class="btn btn-brand"><i class="bi bi-plus-lg"></i> مفتاح جديد</a>
+</div>
+
+@if (TempData["NewKey"] != null)
+{
+    <div class="alert alert-warning">
+        <div class="mb-2 fw-bold">المفتاح الجديد (انسخه الآن، لن يظهر مرة أخرى):</div>
+        <div class="key-box">@TempData["NewKey"]</div>
+    </div>
+}
+
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+    <div class="col-sm-8 col-md-6">
+        <input name="q" value="@q" class="form-control" placeholder="ابحث بالمفتاح المقنّع أو الملاحظات..." />
+    </div>
+    <div class="col-auto"><button class="btn btn-outline-secondary">بحث</button></div>
+</form>
+
+<div class="card"><div class="table-responsive">
+    <table class="table align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>المفتاح</th><th>المدة</th><th>الحالة</th><th>الإنشاء</th>
+                <th>الانتهاء</th><th>الأجهزة</th><th>الأيام المتبقية</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var l in Model)
+        {
+            var remaining = l.ExpiresAtUtc.HasValue ? (int)Math.Ceiling((l.ExpiresAtUtc.Value - DateTime.UtcNow).TotalDays) : 0;
+            <tr>
+                <td class="font-monospace">@l.MaskedKey</td>
+                <td>@DurationLabel(l.Duration)</td>
+                <td><span class="badge @StatusBadge(l.Status)">@StatusLabel(l.Status)</span></td>
+                <td>@l.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                <td>@(l.ExpiresAtUtc?.ToLocalTime().ToString("yyyy-MM-dd") ?? "-")</td>
+                <td>@l.Activations.Count / @l.MaxDevices</td>
+                <td>@(l.ExpiresAtUtc.HasValue ? Math.Max(0, remaining).ToString() : "-")</td>
+                <td class="text-nowrap">
+                    <a asp-action="Details" asp-route-id="@l.Id" class="btn btn-sm btn-outline-secondary">تفاصيل</a>
+                    @if (l.Status == LicenseStatus.Disabled)
+                    {
+                        <form asp-action="Enable" asp-route-id="@l.Id" method="post" class="d-inline">
+                            <button class="btn btn-sm btn-outline-success">تفعيل</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="Disable" asp-route-id="@l.Id" method="post" class="d-inline">
+                            <button class="btn btn-sm btn-outline-warning">تعطيل</button>
+                        </form>
+                    }
+                    <form asp-action="Delete" asp-route-id="@l.Id" method="post" class="d-inline" onsubmit="return confirm('حذف المفتاح؟');">
+                        <button class="btn btn-sm btn-outline-danger">حذف</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div></div>

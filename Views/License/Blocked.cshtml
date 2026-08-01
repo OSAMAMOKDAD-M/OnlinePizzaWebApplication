@@ -1,0 +1,31 @@
+@model LicenseStatusResult
+@{
+    ViewData["Title"] = "انتهى الاشتراك";
+    var reason = Model.State switch
+    {
+        LicenseState.Disabled => "تم تعطيل ترخيص هذا النظام.",
+        LicenseState.ClockTampered => "تم اكتشاف تغيير في تاريخ الجهاز.",
+        _ => "انتهت صلاحية اشتراكك في النظام."
+    };
+}
+<div class="card license-screen"><div class="card-body p-4 text-center">
+    <i class="bi bi-exclamation-octagon-fill text-danger" style="font-size:3rem;"></i>
+    <h1 class="h3 mt-3">@reason</h1>
+
+    @if (Model.ExpiresAtUtc.HasValue)
+    {
+        <div class="row text-center my-4">
+            <div class="col">
+                <div class="fw-bold fs-5">@Model.ExpiresAtUtc.Value.ToLocalTime().ToString("yyyy-MM-dd")</div>
+                <div class="text-muted small">تاريخ الانتهاء</div>
+            </div>
+            <div class="col">
+                <div class="fw-bold fs-5 text-danger">@Model.DaysExpired</div>
+                <div class="text-muted small">عدد الأيام المنتهية</div>
+            </div>
+        </div>
+    }
+
+    <p class="text-muted">لاستئناف استخدام النظام، الرجاء إدخال مفتاح تفعيل صالح.</p>
+    <a asp-action="Activate" class="btn btn-brand w-100">إدخال مفتاح جديد</a>
+</div></div>

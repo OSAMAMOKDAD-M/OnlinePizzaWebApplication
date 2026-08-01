@@ -1,0 +1,34 @@
+@model CreateLicenseViewModel
+@{
+    ViewData["Title"] = "إنشاء ترخيص";
+}
+<div class="col-lg-7 mx-auto">
+    <h1 class="h3 mb-4">إنشاء مفتاح ترخيص جديد</h1>
+    <div class="card"><div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+            <div class="mb-3">
+                <label asp-for="Duration" class="form-label"></label>
+                <select asp-for="Duration" class="form-select"
+                        asp-items="Html.GetEnumSelectList<LicenseDuration>()"></select>
+            </div>
+            <div class="form-check mb-3">
+                <input asp-for="SingleDevice" class="form-check-input" />
+                <label asp-for="SingleDevice" class="form-check-label"></label>
+            </div>
+            <div class="mb-3">
+                <label asp-for="MaxDevices" class="form-label"></label>
+                <input asp-for="MaxDevices" class="form-control" />
+                <div class="form-text">يُستخدم فقط عند إلغاء القفل على جهاز واحد.</div>
+                <span asp-validation-for="MaxDevices" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label"></label>
+                <input asp-for="Notes" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-brand">إنشاء</button>
+            <a asp-action="Index" class="btn btn-link">إلغاء</a>
+        </form>
+    </div></div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,3 +1,61 @@
 # OnlinePizzaWebApplication
-OnlinePizzaWebApplication is a web-based application designed to streamline the online pizza ordering process for customers and administrators. The system allows users to browse the menu, customize pizzas (size, crust, toppings), add items to a shopping cart, and complete orders through a simple and user-friendly interface.
+
+نظام إدارة مطعم بيتزا وطلبات أونلاين مبني بـ ASP.NET Core 8 MVC مع فصل كامل للطبقات
+(Controllers → Services → Repositories → EF Core) ونظام ترخيص احترافي.
+
+## المزايا
+
+- **متجر البيتزا:** تصفّح القائمة، سلة تسوّق، إتمام الطلب، وتتبّع الطلبات.
+- **الأدوار والصلاحيات:** SuperAdmin / Owner / Admin / User عبر ASP.NET Identity.
+- **إدارة المحتوى:** CRUD كامل للبيتزا والتصنيفات والطلبات.
+- **اسم وبيانات المطعم ديناميكية:** تُخزَّن في قاعدة البيانات وتُحدَّث فورًا في كل الشاشات
+  دون إعادة تشغيل (اسم، شعار، عنوان، هاتف، وصف).
+- **نظام ترخيص (License System):**
+  - مدد: أسبوع / شهر / شهران / ثلاثة أشهر / ستة أشهر / سنة.
+  - مفاتيح موقّعة بـ HMAC (يُرفض المفتاح المزيّف قبل الوصول لقاعدة البيانات).
+  - لا تُخزَّن المفاتيح كنص صريح — يُحفظ تجزئة (hash) فقط.
+  - حساب تاريخ الانتهاء تلقائيًا عند أول تفعيل، وعرض الأيام المتبقية والتنبيه قبل الانتهاء.
+  - قفل المفتاح على جهاز واحد أو عدد محدّد من الأجهزة، واكتشاف التلاعب بتاريخ الجهاز.
+  - تسجيل محاولات التفعيل الناجحة والفاشلة.
+  - منع الدخول للنظام عند الانتهاء مع شاشة احترافية وزر إدخال مفتاح جديد.
+- **لوحة إدارة التراخيص (SuperAdmin فقط):** إنشاء/بحث/تعطيل/تفعيل/حذف المفاتيح وإدارة الأجهزة.
+- **صفحة الإعدادات:** بيانات المطعم + حالة الترخيص + الأيام المتبقية + إدخال مفتاح جديد.
+- **حقوق الملكية** معروضة في تذييل كل الصفحات.
+
+## التشغيل
+
+```bash
+dotnet restore
+dotnet run
+```
+
+يعمل التطبيق افتراضيًا على SQLite (`App_Data/pizza.db`) ويُنشئ قاعدة البيانات ويزرع البيانات
+الأولية تلقائيًا. في بيئة التطوير يُفعَّل مفتاح سنوي تلقائيًا؛ في غير ذلك تُحفظ المفاتيح
+المُولّدة في `App_Data/seed-licenses.txt`.
+
+بيانات دخول SuperAdmin الافتراضية (قابلة للتغيير عبر قسم `Seed` في الإعدادات):
+
+- البريد: `superadmin@pizza.local`
+- كلمة المرور: `SuperAdmin#2026`
+
+## الإعدادات (appsettings.json)
+
+- `DatabaseProvider`: `Sqlite` (افتراضي) أو `SqlServer`.
+- `ConnectionStrings:DefaultConnection`: سلسلة الاتصال حسب المزوّد.
+- `License:SigningSecret`: **يجب تغييره في الإنتاج** إلى سر عشوائي طويل.
+- `License:WarningDays`: عدد أيام التنبيه قبل الانتهاء.
+- `Copyright`: بيانات حقوق الملكية المعروضة في التذييل.
+
+## البنية
+
+```
+Controllers/   طبقة العرض (MVC)
+Services/      منطق الأعمال (الترخيص، الإعدادات، التشفير، بصمة الجهاز)
+Repositories/  الوصول للبيانات
+Data/          DbContext، التهيئة، الأدوار
+Models/        الكيانات
+Middleware/    بوابة فرض الترخيص
+Views/         الواجهات (Bootstrap 5 RTL)
+```
+
 contact me : mokdadvipr@gmail.com

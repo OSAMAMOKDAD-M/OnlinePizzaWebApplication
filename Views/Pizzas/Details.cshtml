@@ -1,0 +1,19 @@
+@model Pizza
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="row g-4">
+    <div class="col-md-6">
+        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "https://placehold.co/600x400?text=Pizza" : Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Name" />
+    </div>
+    <div class="col-md-6">
+        <h1 class="h3">@Model.Name</h1>
+        <p class="text-muted">@Model.Description</p>
+        <p class="h4 fw-bold">@Model.Price.ToString("0.##") ج.م</p>
+        <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
+            <input type="hidden" name="id" value="@Model.PizzaId" />
+            <button type="submit" class="btn btn-brand"><i class="bi bi-cart-plus"></i> أضف للسلة</button>
+        </form>
+        <a asp-action="Index" class="btn btn-link mt-2">العودة للقائمة</a>
+    </div>
+</div>

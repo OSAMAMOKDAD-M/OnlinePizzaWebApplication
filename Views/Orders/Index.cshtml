@@ -1,0 +1,25 @@
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "الطلبات";
+}
+<h1 class="h3 mb-4">الطلبات</h1>
+<div class="card"><div class="table-responsive">
+    <table class="table align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>#</th><th>العميل</th><th>الهاتف</th><th>التاريخ</th><th>الإجمالي</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.CustomerName</td>
+                    <td>@order.PhoneNumber</td>
+                    <td>@order.OrderPlaced.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@order.OrderTotal.ToString("0.##")</td>
+                    <td><a asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-sm btn-outline-secondary">تفاصيل</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div></div>

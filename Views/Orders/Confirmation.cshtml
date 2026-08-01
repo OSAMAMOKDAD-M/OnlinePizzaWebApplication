@@ -1,0 +1,16 @@
+@model Order
+@{
+    ViewData["Title"] = "تم استلام الطلب";
+}
+<div class="col-lg-7 mx-auto text-center">
+    <i class="bi bi-check-circle-fill text-success" style="font-size:3rem;"></i>
+    <h1 class="h3 mt-3">تم استلام طلبك بنجاح</h1>
+    <p class="text-muted">رقم الطلب: <strong>#@Model.OrderId</strong></p>
+    <div class="card text-end mt-4"><div class="card-body">
+        <p class="mb-1"><strong>الاسم:</strong> @Model.CustomerName</p>
+        <p class="mb-1"><strong>الهاتف:</strong> @Model.PhoneNumber</p>
+        <p class="mb-1"><strong>العنوان:</strong> @Model.Address</p>
+        <p class="mb-0"><strong>الإجمالي:</strong> @Model.OrderTotal.ToString("0.##") ج.م</p>
+    </div></div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-brand mt-4">العودة للرئيسية</a>
+</div>
